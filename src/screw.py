@@ -97,7 +97,8 @@ class Screw:
             If ``other`` isn't a Screw.
         """
         if not isinstance(other, Screw):
-            raise TypeError
+            raise TypeError(f"other must be a Screw instance instead of {type(other)}")
+
         return Screw(
                 self.direction ^ other.moment + self.moment.gradeInvol() ^ other.direction,
                 self.moment ^ other.moment
@@ -157,6 +158,7 @@ class CoScrew:
         """
         if not isinstance(other, CoScrew):
             raise TypeError(f"other must be a CoScrew instance instead of {type(other)}")
+
         return CoScrew(
                 self.direction + other.direction,
                 self.moment + other.moment
