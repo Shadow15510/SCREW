@@ -85,7 +85,7 @@ class GeometricAlgebra:
             if index:
                 names.append("e" + "".join(map(str, blade_id)))
             else:
-                names.append("1")
+                names.append("e0")
 
         value = np.zeros(self.nb_blades)
         for i in range(self.nb_blades):
@@ -156,7 +156,12 @@ class MultiVector:
         if value is None:
             self.value = np.zeros(geo_alg.nb_blades)
         else:
-            self.value = np.array(value)
+            if isinstance(value, (int, float)):
+                new_value = np.zeros(geo_alg.nb_blades)
+                new_value[0] = value
+            else:
+                new_value = np.array(value)
+            self.value = new_value
 
 
     def __abs__(self):
@@ -185,7 +190,7 @@ class MultiVector:
         TypeError
             If ``other`` is neither a scalar nor a MultiVector instance.
         """
-        new_value = self.value
+        new_value = self.value.copy()
         if isinstance(other, (int, float)):
             new_value[0] += other
 
