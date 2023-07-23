@@ -457,6 +457,41 @@ class MultiVector:
 
         return MultiVector(self.geo_alg, new_value)
 
+    def __rsub__(self, other):
+        """Compute the subtraction ``other - self``.
+
+        Parameters
+        ----------
+        other : MultiVector, scalar
+            The MultiVector or scalar to subtract.
+
+        Returns
+        -------
+        out : MultiVector
+            The result of the subtraction.
+
+        Raises
+        ------
+        TypeError
+            If ``other`` is neither a scalar nor a MultiVector instance.
+        """
+        new_value = np.zeros(self.geo_alg.nb_blades)
+        if isinstance(other, (int, float)):
+            new_value[0] = other - self.value[0]
+            new_value[1:] -= self.value[1:]
+
+        elif isinstance(other, MultiVector):
+            new_value = other.value
+            new_value -= self.value
+
+        else:
+            raise TypeError(f"other must be a scalar or a MultiVector instance instead of "\
+                    f"{type(other)}"
+                )
+
+        return MultiVector(self.geo_alg, new_value)
+
+
     def __xor__(self, other):
         """Compute the outer product ``self ^ other``.
 
