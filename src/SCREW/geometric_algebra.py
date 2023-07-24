@@ -137,9 +137,7 @@ class MultiVector:
       self * other 
 
     * the outer product
-
-      .. code-block:: python
-      self ^ other
+      ``self ^ other``
 
     * the inner product
 
