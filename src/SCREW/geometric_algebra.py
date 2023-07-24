@@ -122,11 +122,30 @@ class MultiVector:
     """An element of the geometric algebra.
 
     The following operators have been overloaded:
-    * + operator ``self + other``
-    * - operator ``self - other``
-    * * operator ``self * other``: geometric product
-    * ^ operator ``self ^ other``: outer product
-    * | operator ``self | other``: inner product
+    * + operator
+
+        .. code-block:: python
+        self + other
+
+    * - operator
+
+        .. code-block:: python
+        self - other
+
+    * * operator (geometric product)
+
+        .. code-block:: python
+        self * other 
+
+    * ^ operator (outer product)
+
+        .. code-block:: python
+        self ^ other
+
+    * | operator (inner product)
+
+        .. code-block:: python
+        self | other
 
     Attributes
     ----------
