@@ -1,25 +1,6 @@
 """
 Implements a MultiVector object and its basic manipulations. This module also provides a
 GeometricAlgebra class to have a workspace for multivectors instance.
-
-Exemples
---------
-By importing the module as follows::
-
-    >>> import geometric_algebra as ga
-    >>> geo_alg = ga.GeometricAlgebra(3) # you should give the dimension of the algebra you want
-    >>> locals().update(geo_alg.blades) # import the basis blades e.g. 1, e1, e2, e3, e12… e123 etc
-
-Then you have fully initialize the module. To create a new MultiVector instance, you have two
-possibilities. The first one is also the easiest::
-    
-    >>> my_mv = 1 (1*e1) + (5*e2) + (1/5 * e13)
-
-You can also call the constructor method manually::
-    
-    >>> my_mv = ga.MultiVector(geo_alg, (1, 1, 5, 0, 0, 1/5, 0, 0))
-
-In the second case you have to give all the coefficient and the GeometricAlgebra instance.
 """
 
 import itertools
@@ -28,7 +9,11 @@ import numpy as np
 
 
 class GeometricAlgebra:
-    """Implements a geometric algebra of given dimension.
+    """Implements a geometric algebra of a given dimension.
+
+    In most cases, you won't have to manipulate this object.
+
+    Print a GeometricAlgebra instance will display the basis blades of the algebra.
 
     Attributes
     ----------
@@ -47,6 +32,11 @@ class GeometricAlgebra:
         This dictionnary contains the basis blades: ``{name: value}`` where
         ``name`` is a string (e.g. '1', 'e1', 'e2' etc) and ``value`` the associated MultiVector
         instance.
+
+    Methods
+    -------
+    .. automethod:: __init__
+    .. automethod:: get_grade
     """
     def __init__(self, dim: int=3):
         """Constructor method.
@@ -99,14 +89,6 @@ class GeometricAlgebra:
         method will return you the index of the first k-vector and the index of the last k-vector of
         your MultiVector.
 
-        For exemple::
-
-            >>> geo_alg = ga.GeometricAlgebra(3)
-            >>> geo_alg.get_grade(2)
-            (4, 6)
-
-        Indeed, the first bivector (i.e. e12) is at index 4 and the last one (i.e. e23) is at 6.
-
         Parameters
         ----------
         grade : int
@@ -117,6 +99,16 @@ class GeometricAlgebra:
         out : tuple
             The output is a tuple composed of two elements. The first one is the first index and the
             second one, the last.
+
+        Exemples
+        --------
+        If we work in a three-dimensionnal algebra::
+
+            >>> geo_alg = ga.GeometricAlgebra(3)
+            >>> geo_alg.get_grade(2)
+            (4, 6)
+
+        Indeed, the first bivector (i.e. e12) is at index 4 and the last one (i.e. e23) is at 6.
         """
         first_index = sum(self.blades_by_grade[:grade])
         last_index = first_index + self.blades_by_grade[grade]
@@ -125,6 +117,7 @@ class GeometricAlgebra:
 
 class MultiVector:
     """An element of the geometric algebra.
+
     The following operators have been overloaded:
     * ``self + other``
     * ``self - other``
@@ -132,13 +125,45 @@ class MultiVector:
     * ``self ^ other``: outer product
     * ``self | other``: inner product
 
-
     Attributes
     ----------
     geo_alg : GeometricAlgebra, public
         The geometric algebra to which the multivector belongs.
     value : np.array, public
         The coefficients on each basis blade.
+
+    Methods
+    -------
+    .. automethod:: __init__
+    .. automethod:: __call__
+    .. automethod:: __getitem__
+    .. automethod:: norm
+    .. automethod:: grade_involution
+
+    Exemples
+    --------
+    Let's show you a complete exemple of a manipulation of MultiVector.
+    You must start by importing the module::
+
+        >>> import geometric_algebra as ga
+        >>> geo_alg = ga.GeometricAlgebra(3)  # you should give the dimension of the algebra
+        >>> locals().update(geo_alg.blades)   # import the basis blades e.g. e0, e1, e2, e3, e12 etc
+
+    Then you have fully initialize the module. To create a new MultiVector instance, you have two
+    possibilities. The first one is also the easiest::
+
+        >>> my_mv = 1 + 1*e1 + 5*e2 + (1/5) * e13
+
+    You can also call the constructor method manually::
+        
+        >>> my_mv = ga.MultiVector(geo_alg, (1, 1, 5, 0, 0, 1/5, 0, 0))
+
+    .. warning::
+        In the second case you have to give all the coefficients and the GeometricAlgebra instance.
+
+    .. note::
+        When you just create a new MultiVector by using the basis blades, the new instance inherits
+        the geometric algebra of the basis blades.
     """
     def __init__(self, geo_alg: GeometricAlgebra, value=None):
         """Constructor method.
@@ -162,15 +187,6 @@ class MultiVector:
             else:
                 new_value = np.array(value)
             self.value = new_value
-
-
-    def __abs__(self):
-        """Compute the norm of the multivector."""
-        result = 0
-        for component in self.value:
-            result += abs(component ** 2)
-
-        return math.sqrt(result)
 
     def __add__(self, other):
         """Compute the addition ``self + other``.
@@ -205,15 +221,7 @@ class MultiVector:
         return MultiVector(self.geo_alg, new_value)
 
     def __call__(self, *grades):
-        """Project the multivector on the basis blades of given grades. Such as::
-
-            >>> my_mv = 1 + (2^e1) + (3^e2) + (4^e12)
-            >>> my_mv(0)
-            1
-            >>> my_mv(1)
-            (2^e1) + (3^e2)
-            >>> my_mv(0, 2)
-            1 + (4^e12)
+        """Project the multivector on the basis blades of given grades.
 
         Parameters
         ----------
@@ -223,7 +231,20 @@ class MultiVector:
         Returns
         -------
         out : MultiVector
-            The result of the projection. 
+            The result of the projection.
+
+        Exemples
+        --------
+        Let ``my_mv`` be a multivector such that ``my_mv = 1 + (2^e1) + (3^e2) + (4^e12)`` and let's
+        see some projections::
+
+            >>> my_mv = 1 + (2^e1) + (3^e2) + (4^e12)
+            >>> my_mv(0)  # projection on scalar
+            1
+            >>> my_mv(1)  # projection on vectors
+            (2^e1) + (3^e2)
+            >>> my_mv(0, 2)  # projection on scalar and bivectors
+            1 + (4^e12)
         """
         new_value = np.zeros(self.geo_alg.nb_blades)
         for grade in grades:
@@ -307,7 +328,7 @@ class MultiVector:
         out : MultiVector
             The opposed MultiVector.
         """
-        return MultiVector(self.geo_alg, -self.value)
+        return MultiVector(self.geo_alg, -self.value.copy())
 
     def __or__(self, other):
         """Compute the inner product ``self | other``.
@@ -394,6 +415,40 @@ class MultiVector:
 
         return MultiVector(self.geo_alg, new_value)
 
+    def __rsub__(self, other):
+        """Compute the subtraction ``other - self``.
+
+        Parameters
+        ----------
+        other : MultiVector, scalar
+            The MultiVector or scalar to subtract.
+
+        Returns
+        -------
+        out : MultiVector
+            The result of the subtraction.
+
+        Raises
+        ------
+        TypeError
+            If ``other`` is neither a scalar nor a MultiVector instance.
+        """
+        new_value = np.zeros(self.geo_alg.nb_blades)
+        if isinstance(other, (int, float)):
+            new_value[0] = other - self.value[0]
+            new_value[1:] -= self.value[1:]
+
+        elif isinstance(other, MultiVector):
+            new_value = other.value.copy()
+            new_value -= self.value
+
+        else:
+            raise TypeError(f"other must be a scalar or a MultiVector instance instead of "\
+                    f"{type(other)}"
+                )
+
+        return MultiVector(self.geo_alg, new_value)
+
     def __rxor__(self, other):
         """Compute the right-hand outer product ``other ^ self``.
 
@@ -448,7 +503,7 @@ class MultiVector:
         TypeError
             If ``other`` is neither a scalar nor a MultiVector instance.
         """
-        new_value = self.value
+        new_value = self.value.copy()
         if isinstance(other, (int, float)):
             new_value[0] -= other
 
@@ -461,41 +516,6 @@ class MultiVector:
                 )
 
         return MultiVector(self.geo_alg, new_value)
-
-    def __rsub__(self, other):
-        """Compute the subtraction ``other - self``.
-
-        Parameters
-        ----------
-        other : MultiVector, scalar
-            The MultiVector or scalar to subtract.
-
-        Returns
-        -------
-        out : MultiVector
-            The result of the subtraction.
-
-        Raises
-        ------
-        TypeError
-            If ``other`` is neither a scalar nor a MultiVector instance.
-        """
-        new_value = np.zeros(self.geo_alg.nb_blades)
-        if isinstance(other, (int, float)):
-            new_value[0] = other - self.value[0]
-            new_value[1:] -= self.value[1:]
-
-        elif isinstance(other, MultiVector):
-            new_value = other.value
-            new_value -= self.value
-
-        else:
-            raise TypeError(f"other must be a scalar or a MultiVector instance instead of "\
-                    f"{type(other)}"
-                )
-
-        return MultiVector(self.geo_alg, new_value)
-
 
     def __xor__(self, other):
         """Compute the outer product ``self ^ other``.
@@ -596,14 +616,35 @@ class MultiVector:
 
         index, sgn = self.__mul_basis(index1, index2)
 
-        # if the two basis blade has a common component, the result will be null as the basis blade
+        # if the two basis blade has a common component, the result will be null as the basis blades
         # are orthogonals.
         for element in id1:
             if element in id2:
                 return index, 0
         return index, sgn
 
-    norm = __abs__
+    def copy(self):
+        """Create a deep copy of the instance.
+
+        Returns
+        -------
+        out : MultiVector
+            The copy of the instance.
+        """
+        return MultiVector(self.geo_alg, self.value.copy())
+
+    def norm(self):
+        """Compute the norm of the multivector.
+
+        Returns
+        -------
+        out : float
+            The norm of the multivector"""
+        result = 0
+        for component in self.value:
+            result += abs(component ** 2)
+
+        return math.sqrt(result)
 
     def grade_involution(self):
         """Compute the grade involution of the multivector.
