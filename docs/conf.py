@@ -19,7 +19,7 @@ author = 'Antoine Royer, Loris Delafosse'
 
 extensions = ['sphinx.ext.autodoc']
 
-templates_p __ath = ['_templates']
+templates_path = ['_templates']
 exclude_patterns = ['Thumbs.db', '.DS_Store']
 
 autosummary_generate = True
