@@ -2,7 +2,6 @@
 Implements a MultiVector object and its basic manipulations. This module also provides a
 GeometricAlgebra class to have a workspace for multivectors instance.
 """
-
 import itertools
 import math
 import numpy as np
