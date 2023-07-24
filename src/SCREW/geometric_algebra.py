@@ -1,6 +1,9 @@
 """
 Implements a MultiVector object and its basic manipulations. This module also provides a
 GeometricAlgebra class to have a workspace for multivectors instance.
+
+.. autoclass:: GeometricAlgebra
+.. autoclass:: MultiVector
 """
 import itertools
 import math
@@ -21,16 +24,16 @@ class GeometricAlgebra:
     nb_blades : int, public
         The number of basis blades the algebra has.
     blades_by_grade : list, public
-        The number of basis blade per grade.
+        The number of basis blades per grade.
         e.g. for a 3D-algebra, it will be ``[1, 3, 3, 1]``
     blades_ids : list, public
         It contains the ids of the basis blades.
-        e.g. for a 2D-algebra, the basis blades are: 1, e1, e2, e12 so the ids will be:
-        [(), (1,), (2,), (1, 2)].
+        e.g. for a 2D-algebra, the basis blades are: ``e0, e1, e2, e12`` so the ids will be:
+        ``[(), (1,), (2,), (1, 2)]``.
     blades : dict, public
         This dictionnary contains the basis blades: ``{name: value}`` where
-        ``name`` is a string (e.g. '1', 'e1', 'e2' etc) and ``value`` the associated MultiVector
-        instance.
+        ``name`` is a string (e.g. ``'e0'``, ``'e1'``, ``'e2'`` etc) and ``value`` the associated
+        MultiVector instance.
 
     Methods
     -------
@@ -84,9 +87,9 @@ class GeometricAlgebra:
 
     def get_grade(self, grade: int):
         """Returns the first and the last index of the researched grade. It can be useful if you
-        search all the k-vectors of a given MultiVector, then you give the grade (i.e. k) and this
+        search all the k-vectors of a given algebra, then you give the grade (i.e. k) and this
         method will return you the index of the first k-vector and the index of the last k-vector of
-        your MultiVector.
+        your algebra.
 
         Parameters
         ----------
@@ -118,17 +121,17 @@ class MultiVector:
     """An element of the geometric algebra.
 
     The following operators have been overloaded:
-    * ``self + other``
-    * ``self - other``
-    * ``self * other``: geometric product
-    * ``self ^ other``: outer product
-    * ``self | other``: inner product
+    *``self + other``
+    *``self - other``
+    *``self * other``: geometric product
+    *``self ^ other``: outer product
+    *``self | other``: inner product
 
     Attributes
     ----------
-    geo_alg : GeometricAlgebra, public
+    geo_alg : GeometricAlgebra
         The geometric algebra to which the multivector belongs.
-    value : np.array, public
+    value : np.array
         The coefficients on each basis blade.
 
     Methods
@@ -173,6 +176,7 @@ class MultiVector:
             The algebra to which the multivector belongs.
         value
             The coefficients of the multivector.
+
             .. note::
                 It must be transtypable into an np.array.
         """

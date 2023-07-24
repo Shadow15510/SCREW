@@ -23,8 +23,9 @@ Let's see a minimal exemple::
 class ScrewBase:
     """Provides a set of common methods for Screw and CoScrew classes.
 
-    You can print a Screw directly by ``print(my_screw)`` but it is recommended to use the
-    ``Screw.show`` method in order to have a better control on the reference point.
+    .. note::
+        You can print a Screw directly by ``print(my_screw)`` but it is recommended to use the
+        ``Screw.show`` method in order to have a better control on the reference point.
 
     Attributes
     ----------
