@@ -100,7 +100,7 @@ class Screw:
             raise TypeError(f"other must be a Screw instance instead of {type(other)}")
 
         return Screw(
-                self.direction ^ other.moment + self.moment.gradeInvol() ^ other.direction,
+                self.direction ^ other.moment + self.moment.grade_involution() ^ other.direction,
                 self.moment ^ other.moment
             )
 
@@ -206,5 +206,5 @@ def comoment(coscrew: CoScrew, screw: Screw):
     out : MultiVector
         The comoment between the given coscrew and the screw.
     """
-    return (-coscrew.direction.gradeInvol() * screw.moment.gradeInvol()
+    return (-coscrew.direction.grade_involution() * screw.moment.grade_involution()
             + screw.direction * coscrew.moment)
