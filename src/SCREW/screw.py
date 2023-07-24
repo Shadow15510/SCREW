@@ -118,10 +118,16 @@ class Screw(ScrewBase):
     """Screw object.
 
     The following operators have been overloaded:
-    * ``self + other``: the addition of screws
-    * ``other + self``
-    * ``self ^ other``: the outer product of screws
-    
+
+    * the addition of screws
+      ``self + other``
+
+    * the right-handed addition
+      ``other + self``
+
+    * the outer product of screws
+      ``self ^ other``
+
     See also
     --------
     This class inherits from the ScrewBase one.

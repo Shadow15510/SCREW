@@ -122,6 +122,7 @@ class MultiVector:
     """An element of the geometric algebra.
 
     The following operators have been overloaded:
+
     * the addition
       ``self + other``
 
@@ -129,7 +130,7 @@ class MultiVector:
       ``self - other``
 
     * the geometric product
-      ``self * other`` 
+      ``self * other``
 
     * the outer product
       ``self ^ other``
