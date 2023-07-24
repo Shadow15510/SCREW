@@ -1,4 +1,5 @@
 # SCREW (Screw and Coscrew Research for Engineering World)
+[![Documentation Status](https://readthedocs.org/projects/screw/badge/?version=latest)](https://screw.readthedocs.io/en/latest/?badge=latest)
 [![Licence](https://img.shields.io/github/license/Shadow15510/SCREW?color=green)](https://github.com/Shadow15510/SCREW/blob/master/LICENSE)
 
 ## Description
