@@ -201,9 +201,15 @@ class CoScrew(ScrewBase):
     """Coscrew object
 
     The following operators have been overloaded:
-    * ``self + other``: the addition of coscrews
-    * ``other + self``
-    * ``scalar * self``: the product between a scalar and a coscrew
+
+    * the addition of coscrews
+      ``self + other``
+
+    * the right-handed addition
+      ``other + self``
+
+    * the product between a scalar and a coscrew
+      ``scalar * self``
 
     See also
     --------
