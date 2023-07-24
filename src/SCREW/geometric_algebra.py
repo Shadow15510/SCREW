@@ -123,24 +123,23 @@ class MultiVector:
 
     The following operators have been overloaded:
     * + operator
-
-        .. code-block:: python
-        self + other
+        ``self + other``
 
     * - operator
 
         .. code-block:: python
-        self - other
+            self - other
 
     * * operator (geometric product)
 
         .. code-block:: python
+
         self * other 
 
     * ^ operator (outer product)
 
-        .. code-block:: python
-        self ^ other
+      .. code-block:: python
+      self ^ other
 
     * | operator (inner product)
 
