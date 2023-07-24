@@ -127,9 +127,8 @@ class MultiVector:
         self + other
 
     * the substraction
-
-        .. code-block:: python
-            self - other
+      .. code-block:: python
+      self - other
 
     * the geometric product
 
@@ -138,14 +137,14 @@ class MultiVector:
         self * other 
 
     * the outer product
-
       .. code-block:: python
       self ^ other
 
     * the inner product
 
-        .. code-block:: python
-        self | other
+      .. code-block:: python
+    
+      self | other
 
     Attributes
     ----------
