@@ -1,6 +1,16 @@
 """
 This module provides two classes that respectively implement a screw and a co-screw.
 
+Classes
+-------
+.. autoclass:: ScrewBase
+.. autoclass:: Screw
+.. autoclass:: CoScrew
+
+Functions
+---------
+.. autofunction:: comoment
+
 Exemples
 --------
 Before using theses objects, you should import the ``geometric_algebra`` module so that you can

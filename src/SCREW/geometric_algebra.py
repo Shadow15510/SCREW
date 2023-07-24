@@ -2,13 +2,14 @@
 Implements a MultiVector object and its basic manipulations. This module also provides a
 GeometricAlgebra class to have a workspace for multivectors instance.
 
+Classes
+-------
 .. autoclass:: GeometricAlgebra
 .. autoclass:: MultiVector
 """
 import itertools
 import math
 import numpy as np
-
 
 class GeometricAlgebra:
     """Implements a geometric algebra of a given dimension.
@@ -19,18 +20,18 @@ class GeometricAlgebra:
 
     Attributes
     ----------
-    dim : int, public
+    dim : int
         The dimension of the algebra. This will create the basis blades of the algebra.
-    nb_blades : int, public
+    nb_blades : int
         The number of basis blades the algebra has.
-    blades_by_grade : list, public
+    blades_by_grade : list
         The number of basis blades per grade.
         e.g. for a 3D-algebra, it will be ``[1, 3, 3, 1]``
-    blades_ids : list, public
+    blades_ids : list
         It contains the ids of the basis blades.
         e.g. for a 2D-algebra, the basis blades are: ``e0, e1, e2, e12`` so the ids will be:
         ``[(), (1,), (2,), (1, 2)]``.
-    blades : dict, public
+    blades : dict
         This dictionnary contains the basis blades: ``{name: value}`` where
         ``name`` is a string (e.g. ``'e0'``, ``'e1'``, ``'e2'`` etc) and ``value`` the associated
         MultiVector instance.
@@ -121,11 +122,11 @@ class MultiVector:
     """An element of the geometric algebra.
 
     The following operators have been overloaded:
-    *``self + other``
-    *``self - other``
-    *``self * other``: geometric product
-    *``self ^ other``: outer product
-    *``self | other``: inner product
+    * + operator ``self + other``
+    * - operator ``self - other``
+    * * operator ``self * other``: geometric product
+    * ^ operator ``self ^ other``: outer product
+    * | operator ``self | other``: inner product
 
     Attributes
     ----------
