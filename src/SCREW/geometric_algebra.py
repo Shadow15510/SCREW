@@ -123,9 +123,10 @@ class MultiVector:
 
     The following operators have been overloaded:
     * the addition
-        
-        .. code-block:: python
-            self + other
+
+      .. code-block:: python
+
+      self + other
 
     * the substraction
       .. code-block:: python
