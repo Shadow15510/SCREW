@@ -1,5 +1,5 @@
 =================================
-Welcome to SCREW's documentation!
+Welcome to GScrew's documentation!
 =================================
 
 Description
