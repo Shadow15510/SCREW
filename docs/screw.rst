@@ -3,5 +3,5 @@
 
 Screws and coscrews
 ===================
-.. automodule:: SCREW.screw
+.. automodule:: screw
    :ignore-module-all:

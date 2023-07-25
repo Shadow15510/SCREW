@@ -3,5 +3,5 @@
 
 Geometric Algebra
 =================
-.. automodule:: SCREW.geometric_algebra
+.. automodule:: geometric_algebra
    :ignore-module-all:

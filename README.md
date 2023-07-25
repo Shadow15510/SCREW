@@ -1,6 +1,6 @@
-# SCREW (Screw and Coscrew Research for Engineering World)
-[![Documentation Status](https://readthedocs.org/projects/screw/badge/?version=latest)](https://screw.readthedocs.io/en/latest/?badge=latest)
-[![Licence](https://img.shields.io/github/license/Shadow15510/SCREW?color=green)](https://github.com/Shadow15510/SCREW/blob/master/LICENSE)
+# GScrew (Generalized Screw Calculus)
+[![Documentation Status](https://readthedocs.org/projects/gscrew/badge/?version=latest)](https://gscrew.readthedocs.io/en/latest/?badge=latest)
+[![Licence](https://img.shields.io/github/license/Shadow15510/GScrew?color=green)](https://github.com/Shadow15510/GScrew/blob/master/LICENSE)
 
 ## Description
 A Python module to manipulate Screws and Coscrews with geometrics algebra (Clifford's Algebra).
