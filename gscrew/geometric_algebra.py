@@ -52,12 +52,15 @@ class GeometricAlgebra:
         """
         self.dim = dim
         self.nb_blades = 2 ** dim
+
         self.blades_by_grade = [binomial_coefficient(dim, i) for i in range(dim + 1)]
-        ids = [i + 1 for i in range(self.dim)]
-        self.blades_ids = list(itertools.chain.from_iterable(
-                itertools.combinations(ids, r)
-                for r in range(self.dim + 1)
-            ))
+
+        ids = []
+        for i in range(self.nb_blades):
+            ids.append((to_array(i, dim), i.bit_count(), i))
+
+        self.blades_ids = [i[0] for i in sorted(ids, key=lambda x: x[1])]
+
         self.blades = {}
         self.__generate_blades()
 
@@ -73,10 +76,16 @@ class GeometricAlgebra:
 
     def __generate_blades(self):
         """Generate the basis blades for the given dimension."""
+        ids = [i + 1 for i in range(self.dim)]
+        blades_names = list(itertools.chain.from_iterable(
+                itertools.combinations(ids, r)
+                for r in range(self.dim + 1)
+            ))
+
         names = []
-        for index, blade_id in enumerate(self.blades_ids):
+        for index, blade_name in enumerate(blades_names):
             if index:
-                names.append("e" + "".join(map(str, blade_id)))
+                names.append("e" + "".join(map(str, blade_name)))
             else:
                 names.append("e0")
 
@@ -188,8 +197,7 @@ class MultiVector:
         value
             The coefficients of the multivector.
 
-            .. note::
-                It must be transtypable into an np.array.
+            .. note:: It must be transtypable into an np.array.
         """
         self.geo_alg = geo_alg
         if value is None:
@@ -328,9 +336,11 @@ class MultiVector:
 
         new_value = np.zeros(self.geo_alg.nb_blades)
         for i in range(self.geo_alg.nb_blades):
-            for j in range(self.geo_alg.nb_blades):
-                index, sgn = self.__mul_basis(i, j)
-                new_value[index] += sgn * (self[i] * other[j])
+            if self[i]:
+                for j in range(self.geo_alg.nb_blades):
+                    if other[j]:
+                        index, sgn = self.__mul_basis(i, j)
+                        new_value[index] += sgn * self[i] * other[j]
 
         return MultiVector(self.geo_alg, new_value)
 
@@ -423,9 +433,11 @@ class MultiVector:
 
         new_value = np.zeros(self.geo_alg.nb_blades)
         for i in range(self.geo_alg.nb_blades):
-            for j in range(self.geo_alg.nb_blades):
-                index, sgn = self.__mul_basis(j, i)
-                new_value[index] += sgn * (other[i] * self[j])
+            if other[i]:
+                for j in range(self.geo_alg.nb_blades):
+                    if self[j]:
+                        index, sgn = self.__mul_basis(j, i)
+                        new_value[index] += sgn * other[i] * self[j]
 
         return MultiVector(self.geo_alg, new_value)
 
@@ -489,13 +501,9 @@ class MultiVector:
                     f"{type(other)}"
                 )
 
-        new_value = np.zeros(self.geo_alg.nb_blades)
-        for i in range(self.geo_alg.nb_blades):
-            for j in range(self.geo_alg.nb_blades):
-                index, sgn = self.__xor_basis(j, i)
-                new_value[index] += sgn * (other[i] * self[j])
-
-        return MultiVector(self.geo_alg, new_value)
+        if self == other:
+            return MultiVector(self.geo_alg)
+        return (other * self) - (other | self)
 
     __str__ = __repr__
 
@@ -557,13 +565,9 @@ class MultiVector:
                     f"{type(other)}"
                 )
 
-        new_value = np.zeros(self.geo_alg.nb_blades)
-        for i in range(self.geo_alg.nb_blades):
-            for j in range(self.geo_alg.nb_blades):
-                index, sgn = self.__xor_basis(i, j)
-                new_value[index] += sgn * (self[i] * other[j])
-
-        return MultiVector(self.geo_alg, new_value)
+        if self == other:
+            return MultiVector(self.geo_alg)
+        return (self * other) - (self | other)
 
     def __mul_basis(self, index1: int, index2: int):
         """Compute the geometrical product between two basis blades.
@@ -581,61 +585,14 @@ class MultiVector:
             A tuple of the form: ``(index, sign)`` where ``index`` is the index of the
             resulting basis blade and ``sign`` the sign of the result.
         """
-        # get the id from the index
-        id1 = list(self.geo_alg.blades_ids[index1])
-        id2 = list(self.geo_alg.blades_ids[index2])
+        array = [
+                i^j for i, j in
+                zip(self.geo_alg.blades_ids[index1], self.geo_alg.blades_ids[index2])
+            ]
 
-        # concatenate the ids
-        new_id = id1 + id2
-        sgn = 1
-
-        # sort the new id and count the permutation numbers
-        for i in range(1, len(new_id)):
-            id_to_sort = new_id[i]
-            j = i
-            while j > 0 and id_to_sort < new_id[j - 1]:
-                sgn *= -1
-                new_id[j] = new_id[j - 1]
-                j -= 1
-
-            new_id[j] = id_to_sort
-
-        # simplify the results with the rule: e_i * e_i = 1.
-        simplified_id = new_id.copy()
-        for element in new_id:
-            if new_id.count(element) > 1:
-                while simplified_id.count(element):
-                    simplified_id.remove(element)
-
-        return self.geo_alg.blades_ids.index(tuple(simplified_id)), sgn
-
-    def __xor_basis(self, index1: int, index2: int):
-        """Compute the outer product between two basis blades.
-
-        Parameters
-        ----------
-        index1 : int
-            The first basis blade (its index).
-        index2 : int
-            The second basis blade (its index).
-
-        Returns
-        -------
-        out : tuple
-            A tuple of the form: ``(index, sign)`` where ``index`` is the index of the
-            resulting basis blade and ``sign`` the sign of the result.
-        """
-        id1 = list(self.geo_alg.blades_ids[index1])
-        id2 = list(self.geo_alg.blades_ids[index2])
-
-        index, sgn = self.__mul_basis(index1, index2)
-
-        # if the two basis blade has a common component, the result will be null as the basis blades
-        # are orthogonals.
-        for element in id1:
-            if element in id2:
-                return index, 0
-        return index, sgn
+        new_index = self.geo_alg.blades_ids.index(array)
+        sign = get_sign(self.geo_alg.blades_ids[index1], self.geo_alg.blades_ids[index2])
+        return new_index, sign
 
     def copy(self):
         """Create a deep copy of the instance.
@@ -700,3 +657,116 @@ def binomial_coefficient(n: int, k: int):
         coeff = coeff * (n - i) // (i + 1)
 
     return coeff
+
+def to_array(integer: int, nb_bit: int):
+    """Convert an integer into an array of bits.
+
+    Parameters
+    ----------
+    integer : int
+        The integer to convert into an array.
+    nb_bit : int
+        The number of bits over which to express ``integer``.
+
+    Returns
+    -------
+    array : np.array
+        The array of bits.
+
+    Raises
+    ------
+    ValueError
+        If the integer can't be expressed on ``nb_bit`` bits.
+
+    Exemples
+    --------
+    For exemple, the decimal number 5 is expressed as 101 in base 2, if we want to have an array of
+    4 bits, the function will return ``np.array([0, 1, 0, 1])``::
+
+        >>> to_array(5, 4)
+        array([0, 1, 0, 1])
+        >>> to_array(7, 3)
+        array([1, 1, 1])
+    """
+    if integer >= 2 ** nb_bit:
+        raise ValueError(f"{integer} can't be expressed on {nb_bit} bits")
+
+    array = list(map(int, bin(integer)[2:]))
+    while len(array) < nb_bit:
+        array.insert(0, 0)
+    return array
+
+
+def get_index(array_like, search_element: np.array):
+    """Search the index of ``search_element`` into ``array_like``.
+
+    Parameters
+    ----------
+    array_like
+        A list or a tuple of NumPy arrays.
+    search_element : np.array
+        The researched array
+
+    Returns
+    -------
+    index : int
+        The index of ``search_element`` in ``array_like``.
+
+    Raises
+    ------
+    ValueError
+        If ``search_element`` is not in ``array_like``.
+    """
+    return np.where(search_element == array_like)
+
+    # for index, value in enumerate(array_like):
+    #     if (value == search_element).all():
+    #         return index
+    # raise ValueError(f"{rslt} not in {array_like.__class__.__name__}")
+
+
+def get_sign(array1: np.array, array2: np.array):
+    """Calculate the sign of the geometric product between the given basis blades.
+
+    Parameters
+    ----------
+    array1 : np.array
+        The array form of the first basis blade.
+    array2 : np.array
+        The array form of the second basis blade.
+
+    Returns
+    -------
+    out : int
+        The sign of the geometric product between the two basis blades.
+    """    
+    id1 = int("0b" + "".join(map(str, array1)), 2) // 2
+    id2 = int("0b" + "".join(map(str, array2)), 2)
+
+    n_swap = 0
+    while id1:
+        n_swap += (id1 & id2).bit_count()
+        id1 //= 2
+    n_swap += 1
+    return 2 * (n_swap % 2) - 1
+
+
+
+if __name__ == "__main__":
+    from screw import Screw, CoScrew, comoment
+    ga = GeometricAlgebra()
+    locals().update(ga.blades)
+
+    A = 0 * e1
+
+    S1 = 1 * e2
+    M1 = 1 * e23
+
+    S2 = 0 * e0
+    M2 = 5 * e1
+
+    screw1 = Screw(A,S1,M1)
+
+    screw2 = CoScrew(A,S2,M2)
+
+    print(comoment(screw2, screw1))
