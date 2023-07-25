@@ -739,7 +739,7 @@ def get_sign(array1: np.array, array2: np.array):
     -------
     out : int
         The sign of the geometric product between the two basis blades.
-    """    
+    """
     id1 = int("0b" + "".join(map(str, array1)), 2) // 2
     id2 = int("0b" + "".join(map(str, array2)), 2)
 
