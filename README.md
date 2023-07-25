@@ -1,22 +1,22 @@
 # GScrew (Generalized Screw Calculus)
 [![Documentation Status](https://readthedocs.org/projects/gscrew/badge/?version=latest)](https://gscrew.readthedocs.io/en/latest/?badge=latest)
 [![Licence](https://img.shields.io/github/license/Shadow15510/GScrew?color=green)](https://github.com/Shadow15510/GScrew/blob/master/LICENSE)
+[![Build Status](https://github.com/Shadow15510/GScrew/actions/workflows/python-publish.yml/badge.svg)](https://github.com/Shadow15510/GScrew/blob/master/.github/workflows/python-publish.yml)
 
 ## Description
 A Python module to manipulate Screws and Coscrews with geometrics algebra (Clifford's Algebra).
 
-The full documentation is on readthedocs.
-
-If you encounter an issue, feel free to open one.
+- [readthedocs Documentation](https://gscrew.readthedocs.io/en/latest/).
+- [Bug tracker](https://github.com/Shadow15510/GScrew/issues).
 
 ## Installation
-A Pypi package is available, please refer to the Pypi page or enter `pip install gscrew` in a terminal.
+A Pypi package is available, please refer to the [Pypi page](https://pypi.org/project/GScrew/) or enter `pip install gscrew` in a terminal.
 
 ## Exemples
 First of all, you need to import the modules:
 ```
-import geometric_algebra as ga
-from screw import Screw
+import gscrew.geometric_algebra as ga
+from gscrew.screw import Screw
 ```
 The `screw` module also provides a `CoScrew` object and the `comoment` function for calculating the comoment between a coscrew and a screw.
 

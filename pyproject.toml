@@ -40,5 +40,5 @@ attr = "GScrew.__init__.__version__"
 dependencies = {file = ["requirements.txt"]}
 
 [project.urls]
-Homepage = "https://github.com/Shadow15510/SCREW"
-Documentation = "http://screw.readthedocs.io/"
+Homepage = "https://github.com/Shadow15510/GScrew"
+Documentation = "http://gscrew.readthedocs.io/"

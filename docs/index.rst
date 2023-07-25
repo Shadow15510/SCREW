@@ -6,10 +6,13 @@ Description
 -----------
 A Python module to manipulate Screws and Coscrews with geometrics algebra (Clifford's Algebra).
 
+The full documentation is available on `readthedocs <https://gscrew.readthedocs.io/en/latest/>`_.
+
+If you encounter any issue, feel free to open a ticket in the `bug tracker <https://github.com/Shadow15510/GScrew/issues>`_.
+
 Installation
 ------------
-There's not installation method yet.
-We are working on a Pypi integration.
+A Pypi package is available, please refer to the `Pypi page <https://pypi.org/project/GScrew/>`_ or enter ``pip install GScrew`` in a terminal.
 
 Licence
 -------
