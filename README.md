@@ -5,6 +5,13 @@
 ## Description
 A Python module to manipulate Screws and Coscrews with geometrics algebra (Clifford's Algebra).
 
+The full documentation is on readthedocs.
+
+If you encounter an issue, feel free to open one.
+
+## Installation
+A Pypi package is available, please refer to the Pypi page or enter `pip install gscrew` in a terminal.
+
 ## Exemples
 First of all, you need to import the modules:
 ```
