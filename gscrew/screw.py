@@ -65,7 +65,15 @@ class ScrewBase:
             The direction of the (co)screw, usually named S.
         moment : MultiVector
             The moment of the (co)screw, usually named M.
+
+        Raises
+        ------
+        TypeError
+            If ``ref_point`` is not as point.
         """
+        if ref_point(1) != ref_point:
+            raise TypeError("ref_point is not a point")
+
         self.ref_point = ref_point
         self.direction = direction
         self.moment = moment
