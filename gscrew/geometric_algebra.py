@@ -749,24 +749,3 @@ def get_sign(array1: np.array, array2: np.array):
         id1 //= 2
     n_swap += 1
     return 2 * (n_swap % 2) - 1
-
-
-
-if __name__ == "__main__":
-    from screw import Screw, CoScrew, comoment
-    ga = GeometricAlgebra()
-    locals().update(ga.blades)
-
-    A = 0 * e1
-
-    S1 = 1 * e2
-    M1 = 1 * e23
-
-    S2 = 0 * e0
-    M2 = 5 * e1
-
-    screw1 = Screw(A,S1,M1)
-
-    screw2 = CoScrew(A,S2,M2)
-
-    print(comoment(screw2, screw1))
