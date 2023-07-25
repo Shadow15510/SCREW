@@ -13,8 +13,8 @@ Importing the package
 ---------------------
 Once GScrew is installed, you should import it as following::
 	
-	import GScrew.geometric_algebra as ga
-	from GScrew.screw import Screw, CoScrew, comoment
+	import gscrew.geometric_algebra as ga
+	from gscrew.screw import Screw, CoScrew, comoment
 
 The ``geometric_algebra`` module is a framework which provides you a n-dimensional geometric algebra and multivectors.
 

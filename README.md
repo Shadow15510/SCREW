@@ -15,8 +15,8 @@ A Pypi package is available, please refer to the [Pypi page](https://pypi.org/pr
 ## Exemples
 First of all, you need to import the modules:
 ```
-import GScrew.geometric_algebra as ga
-from GScrew.screw import Screw
+import gscrew.geometric_algebra as ga
+from gscrew.screw import Screw
 ```
 The `screw` module also provides a `CoScrew` object and the `comoment` function for calculating the comoment between a coscrew and a screw.
 
