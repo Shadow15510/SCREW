@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "GScrew"
+name = "gscrew"
 authors = [
 	{name="Antoine Royer"},
 	{name="Loris Delafosse"}
@@ -34,7 +34,7 @@ doc = [
 ]
 
 [tool.setuptools.dynamic.version]
-attr = "GScrew.__init__.__version__"
+attr = "gscrew.__init__.__version__"
 
 [tool.setuptools.dynamic]
 dependencies = {file = ["requirements.txt"]}
