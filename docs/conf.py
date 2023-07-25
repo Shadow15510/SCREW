@@ -8,7 +8,7 @@
 
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../../GScrew'))
+sys.path.insert(0, os.path.abspath('../GScrew'))
 
 project = 'GScrew'
 copyright = '2023, Antoine Royer Loris Delafosse'
