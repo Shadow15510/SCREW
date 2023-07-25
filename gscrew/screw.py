@@ -298,4 +298,4 @@ def comoment(coscrew: CoScrew, screw: Screw):
         The comoment between the given coscrew and the screw.
     """
     return (-coscrew.direction.grade_involution() * screw.moment.grade_involution()
-            + screw.direction * coscrew.moment)
+            + screw.direction * coscrew.moment)(0)
