@@ -12,12 +12,12 @@ If you encounter any issue, feel free to open a ticket in the `bug tracker <http
 
 Installation
 ------------
-A Pypi package is available, please refer to the `Pypi page <https://pypi.org/project/GScrew/>`_ or enter ``pip install GScrew`` in a terminal.
+A Pypi package is available, please refer to the `Pypi page <https://pypi.org/project/GScrew/>`_ or enter ``pip install gscrew`` in a terminal.
 
 Licence
 -------
 This project is under GNU General Public Licence v3.0 or later (GPLv3+).
-Please see `LICENCE <https://github.com/Shadow15510/SCREW/blob/master/LICENSE>`_ for more informations.
+Please see `LICENCE <https://github.com/Shadow15510/GScrew/blob/master/LICENSE>`_ for more informations.
 
 Content
 -------
