@@ -200,7 +200,8 @@ class Screw(ScrewBase):
 
         return Screw(
                 self.ref_point,
-                self.direction ^ other.moment + self.moment.grade_involution() ^ other.direction,
+                (self.direction ^ other.moment) + (self.moment.grade_involution() ^
+                        other.direction),
                 self.moment ^ other.moment
             )
 
