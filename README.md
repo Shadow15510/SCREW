@@ -4,7 +4,7 @@
 [![Build Status](https://github.com/Shadow15510/GScrew/actions/workflows/python-publish.yml/badge.svg)](https://github.com/Shadow15510/GScrew/blob/master/.github/workflows/python-publish.yml)
 
 ## Description
-A Python module to manipulate Screws and Coscrews with geometrics algebra (Clifford's Algebra).
+A Python module to manipulate generalized Screws and Coscrews with geometric algebras (real Clifford algebras).
 
 - [readthedocs Documentation](https://gscrew.readthedocs.io/en/latest/).
 - [Bug tracker](https://github.com/Shadow15510/GScrew/issues).
