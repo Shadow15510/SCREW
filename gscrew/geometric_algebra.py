@@ -183,6 +183,7 @@ class MultiVector:
     .. automethod:: dual
     .. automethod:: grade_involution
     .. automethod:: inverse
+    .. automethod:: isspinor
 
     Exemples
     --------
@@ -752,6 +753,16 @@ class MultiVector:
             The dual.
         """
         return self * tuple(self.geo_alg.blades.values())[-1].inverse()
+
+    def isspinor(self):
+        """Tests if the multivector is a spinor, i.e. if all its blade have even grade.
+
+        Returns
+        -------
+        out : bool
+            It equals to ``True`` if the multivector is a spinor, ``False`` else.
+        """
+        return self == sum(self(k) for k in range(self.geo_alg.dim + 1) if k % 2 == 0)
 
 
 def binomial_coefficient(n: int, k: int):

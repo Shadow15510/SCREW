@@ -145,7 +145,7 @@ class Screw(ScrewBase):
 
     Methods
     -------
-    .. automethod:: change_point
+    .. automethod:: dual
 
     See also
     --------
@@ -214,6 +214,20 @@ class Screw(ScrewBase):
                 self.moment ^ other.moment
             )
 
+    def dual(self):
+        """Compte the dual coscrew of a screw.
+
+        Returns
+        -------
+        out : CoScrew
+            The dual coscrew.
+        """
+        return CoScrew(
+                self.ref_point,
+                -(self.direction.dual()).grade_involution(),
+                self.moment.dual()
+            )
+
 
 class CoScrew(ScrewBase):
     """Coscrew object
@@ -228,10 +242,10 @@ class CoScrew(ScrewBase):
 
     * the product between a scalar and a coscrew
       ``scalar * self``
-    
+
     Methods
     -------
-    .. automethod:: change_point
+    .. automethod:: composition
 
     See also
     --------
@@ -257,6 +271,9 @@ class CoScrew(ScrewBase):
         """
         if not isinstance(other, CoScrew):
             raise TypeError(f"other must be a CoScrew instance instead of {type(other)}")
+
+        if self.ref_point != other.ref_point:
+            other = other.change_point(self.ref_point)
 
         return CoScrew(
                 self.ref_point,
@@ -291,6 +308,41 @@ class CoScrew(ScrewBase):
                 self.ref_point,
                 scalar * self.direction,
                 scalar * self.moment
+            )
+
+    def composition(self, other):
+        """Compute the composition of two coscrew.
+        
+        Parameters
+        ----------
+        other : CoScrew
+            The other coscrew.
+
+        Returns
+        -------
+        out : CoScrew
+            The result of the composition.
+
+        Raises
+        ------
+        TypeError
+            If ``other`` is not a CoScrew instance.
+        ValueError
+            If the two directions are not spinors.
+        """
+        if not isinstance(other, CoScrew):
+            raise TypeError(f"other must be a CoScrew instance instead of {type(other)}")
+
+        if not (self.direction.isspinor() and other.direction.isspinor()):
+            raise ValueError("all the directions must be spinors")
+
+        if self.ref_point != other.ref_point:
+            other = other.change_point(self.ref_point)
+
+        return CoScrew(
+                self.ref_point,
+                self.direction * other.direction,
+                self.direction * other.moment + self.moment * other.direction
             )
 
 
