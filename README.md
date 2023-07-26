@@ -1,13 +1,13 @@
 # GScrew (Generalized Screw Calculus)
 [![Documentation Status](https://readthedocs.org/projects/gscrew/badge/?version=latest)](https://gscrew.readthedocs.io/en/latest/?badge=latest)
-[![Licence](https://img.shields.io/github/license/Shadow15510/GScrew?color=green)](https://github.com/Shadow15510/GScrew/blob/master/LICENSE)
-[![Build Status](https://github.com/Shadow15510/GScrew/actions/workflows/python-publish.yml/badge.svg)](https://github.com/Shadow15510/GScrew/blob/master/.github/workflows/python-publish.yml)
+[![Licence](https://img.shields.io/github/license/GenScrew/GScrew?color=green)](https://github.com/GenScrew/GScrew/blob/master/LICENSE)
+[![Build Status](https://github.com/GenScrew/GScrew/actions/workflows/python-publish.yml/badge.svg)](https://github.com/GenScrew/GScrew/blob/master/.github/workflows/python-publish.yml)
 
 ## Description
 A Python module to manipulate generalized Screws and Coscrews with geometric algebras (real Clifford algebras).
 
 - [readthedocs Documentation](https://gscrew.readthedocs.io/en/latest/).
-- [Bug tracker](https://github.com/Shadow15510/GScrew/issues).
+- [Bug tracker](https://github.com/GenScrew/GScrew/issues).
 
 ## Installation
 A Pypi package is available, please refer to the [Pypi page](https://pypi.org/project/GScrew/) or enter `pip install gscrew` in a terminal.
