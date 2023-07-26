@@ -49,11 +49,8 @@ class ScrewBase:
     Methods
     -------
     .. automethod:: __init__
-    .. automethod:: change_point
     .. automethod:: show
     """
-    classname = "ScrewBase"
-
     def __init__(self, ref_point, direction, moment):
         """Constructor method.
 
@@ -86,26 +83,8 @@ class ScrewBase:
         out : str
             The string representation of the (co)Screw.
         """
-        return f"{self.classname}(\n\tdirection={self.direction}\n\tmoment={self.moment}\n)"
-
-    def change_point(self, new_point):
-        """Computes and returns the (co)screw on the new reference point.
-
-        Parameters
-        ----------
-        new_point : MultiVector
-            The new point.
-
-        Returns
-        -------
-        out : (co)Screw
-            The (co)screw on ``new_point``.
-        """
-        return self.__class__(
-                new_point,
-                self.direction,
-                self.moment - ((new_point - self.ref_point) ^ self.direction)
-            )
+        name = self.__class__.__name__
+        return f"{name}(\n\tdirection={self.direction}\n\tmoment={self.moment}\n)"
 
     def show(self, new_point=None):
         """Print the (co)screw on a given point.
@@ -136,12 +115,14 @@ class Screw(ScrewBase):
     * the outer product of screws
       ``self ^ other``
 
+    Methods
+    -------
+    .. automethod:: change_point
+
     See also
     --------
     This class inherits from the ScrewBase one.
     """
-    classname = "Screw"
-
     def __add__(self, other):
         """The addition ``self + other``.
 
@@ -205,6 +186,25 @@ class Screw(ScrewBase):
                 self.moment ^ other.moment
             )
 
+    def change_point(self, new_point):
+        """Computes and returns the screw on the new reference point.
+
+        Parameters
+        ----------
+        new_point : MultiVector
+            The new point.
+
+        Returns
+        -------
+        out : Screw
+            The screw on ``new_point``.
+        """
+        return Screw(
+                new_point,
+                self.direction,
+                self.moment - ((new_point - self.ref_point) ^ self.direction)
+            )
+
 
 class CoScrew(ScrewBase):
     """Coscrew object
@@ -219,13 +219,15 @@ class CoScrew(ScrewBase):
 
     * the product between a scalar and a coscrew
       ``scalar * self``
+    
+    Methods
+    -------
+    .. automethod:: change_point
 
     See also
     --------
     This class inherits from the ScrewBase one.
     """
-    classname = "CoScrew"
-
     def __add__(self, other):
         """The addition ``self + other``.
 
@@ -282,6 +284,26 @@ class CoScrew(ScrewBase):
                 scalar * self.moment
             )
 
+    def change_point(self, new_point):
+        """Computes and returns the coscrew on the new reference point.
+
+        Parameters
+        ----------
+        new_point : MultiVector
+            The new point.
+
+        Returns
+        -------
+        out : CoScrew
+            The (co)screw on ``new_point``.
+        """
+        return self.__class__(
+                new_point,
+                self.direction,
+                self.moment - (self.direction | (new_point - self.ref_point))
+            )
+
+
 def comoment(coscrew: CoScrew, screw: Screw):
     """Compute the comoment between a coscrew and a screw.
 
@@ -297,5 +319,5 @@ def comoment(coscrew: CoScrew, screw: Screw):
     out : MultiVector
         The comoment between the given coscrew and the screw.
     """
-    return (-coscrew.direction.grade_involution() * screw.moment.grade_involution()
-            + screw.direction * coscrew.moment)(0)
+    return (-coscrew.direction.grade_involution() * screw.moment.grade_involution())(0)
+            + (screw.direction * coscrew.moment)(0)
