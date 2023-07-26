@@ -49,6 +49,7 @@ class ScrewBase:
     Methods
     -------
     .. automethod:: __init__
+    .. automethod:: change_point
     .. automethod:: show
     """
     def __init__(self, ref_point, direction, moment):
@@ -85,6 +86,33 @@ class ScrewBase:
         """
         name = self.__class__.__name__
         return f"{name}(\n\tdirection={self.direction}\n\tmoment={self.moment}\n)"
+
+    def change_point(self, new_point):
+        """Computes and returns the (co)screw on the new reference point. The formula changes
+        according to the type of screw.
+
+        Parameters
+        ----------
+        new_point : MultiVector
+            The new point.
+
+        Returns
+        -------
+        out : (Co)Screw
+            The screw on ``new_point``.
+        """
+        new_moment = self.moment
+        if self.__class__.__name__ == "Screw":
+            new_moment = self.moment - ((new_point - self.ref_point) ^ self.direction)
+        elif self.__class__.__name__ == "CoScrew":
+            new_moment = self.moment - (self.direction | (new_point - self.ref_point))
+
+        return self.__class__(
+                new_point,
+                self.direction,
+                new_moment
+            )
+
 
     def show(self, new_point=None):
         """Print the (co)screw on a given point.
@@ -186,25 +214,6 @@ class Screw(ScrewBase):
                 self.moment ^ other.moment
             )
 
-    def change_point(self, new_point):
-        """Computes and returns the screw on the new reference point.
-
-        Parameters
-        ----------
-        new_point : MultiVector
-            The new point.
-
-        Returns
-        -------
-        out : Screw
-            The screw on ``new_point``.
-        """
-        return Screw(
-                new_point,
-                self.direction,
-                self.moment - ((new_point - self.ref_point) ^ self.direction)
-            )
-
 
 class CoScrew(ScrewBase):
     """Coscrew object
@@ -284,25 +293,6 @@ class CoScrew(ScrewBase):
                 scalar * self.moment
             )
 
-    def change_point(self, new_point):
-        """Computes and returns the coscrew on the new reference point.
-
-        Parameters
-        ----------
-        new_point : MultiVector
-            The new point.
-
-        Returns
-        -------
-        out : CoScrew
-            The (co)screw on ``new_point``.
-        """
-        return self.__class__(
-                new_point,
-                self.direction,
-                self.moment - (self.direction | (new_point - self.ref_point))
-            )
-
 
 def comoment(coscrew: CoScrew, screw: Screw):
     """Compute the comoment between a coscrew and a screw.
@@ -319,5 +309,5 @@ def comoment(coscrew: CoScrew, screw: Screw):
     out : MultiVector
         The comoment between the given coscrew and the screw.
     """
-    return (-coscrew.direction.grade_involution() * screw.moment.grade_involution())(0)
-            + (screw.direction * coscrew.moment)(0)
+    return ((-coscrew.direction.grade_involution() * screw.moment.grade_involution())(0)
+            + (screw.direction * coscrew.moment)(0))

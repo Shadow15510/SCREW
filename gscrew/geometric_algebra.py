@@ -55,7 +55,7 @@ class GeometricAlgebra:
 
         self.blades_by_grade = [binomial_coefficient(dim, i) for i in range(dim + 1)]
 
-        ids = [i for i in range(self.nb_blades)]
+        ids = list(range(self.nb_blades))
         self.blades_ids = sorted(ids, key=lambda elmnt: elmnt.bit_count())
 
         self.blades = {}
@@ -125,7 +125,7 @@ class GeometricAlgebra:
 
 
 class MultiVector:
-    """An element of the geometric algebra.
+    r"""An element of the geometric algebra.
 
     The following operators have been overloaded:
 
@@ -144,6 +144,29 @@ class MultiVector:
     * the inner product
       ``self | other``
 
+    * the scalar division
+      ``self / scalar``
+
+    Some others manipulations are available:
+
+    * the projection on grade k
+      ``my_multivector(k)``
+    
+    * the norm
+      ``abs(my_multivector)``
+
+    * the inversion
+      ``my_multivector.inverse()``
+
+    * the reversion :math:`A^{\dagger}`
+      ``~my_multivector``
+
+    * the dual calculation
+      ``my_multivector.dual()``
+
+    * the grade involution
+      ``my_multivector.grade_involution()``
+
     Attributes
     ----------
     geo_alg : GeometricAlgebra
@@ -157,8 +180,9 @@ class MultiVector:
     .. automethod:: __call__
     .. automethod:: __getitem__
     .. automethod:: copy
-    .. automethod:: norm
+    .. automethod:: dual
     .. automethod:: grade_involution
+    .. automethod:: inverse
 
     Exemples
     --------
@@ -403,11 +427,11 @@ class MultiVector:
             raise TypeError(f"other must be a scalar or a MultiVector instance instead of "\
                     f"{type(other)}"
                 )
-        
+
         new_mv = MultiVector(self.geo_alg)
-        for r in range(1, self.geo_alg.dim + 1):
-            for s in range(1, self.geo_alg.dim + 1):
-                new_mv += (self(r) * other(s))(abs(s - r))
+        for gd1 in range(1, self.geo_alg.dim + 1):
+            for gd2 in range(1, self.geo_alg.dim + 1):
+                new_mv += (self(gd1) * other(gd2))(abs(gd2 - gd1))
 
         return new_mv
 
@@ -699,20 +723,34 @@ class MultiVector:
         return new_mv
 
     def inverse(self):
+        """Compute the inverse of a given multivector.
+
+        Returns
+        -------
+        out : MultiVector
+            The inverted multivector.
+        """
         system = np.zeros((self.geo_alg.nb_blades, self.geo_alg.nb_blades))
         for i in range(self.geo_alg.nb_blades):
             column = (self * tuple(self.geo_alg.blades.values())[i]).value
             for j in range(self.geo_alg.nb_blades):
                 if column[j] > 1e-10 or column[j] < -1e-10:
                     system[j, i] = column[j]
-        
+
         new_value = list(map(
                 lambda x: round(x, self.precision),
-                np.linalg.solve(system, e0.value)
+                np.linalg.solve(system, tuple(self.geo_alg.blades.values())[0].value)
             ))
         return MultiVector(self.geo_alg, new_value)
 
     def dual(self):
+        """Compute the dual multivector.
+
+        Returns
+        -------
+        out : MultiVector
+            The dual.
+        """
         return self * tuple(self.geo_alg.blades.values())[-1].inverse()
 
 
@@ -742,7 +780,3 @@ def binomial_coefficient(n: int, k: int):
         coeff = coeff * (n - i) // (i + 1)
 
     return coeff
-
-if __name__ == "__main__":
-    ga = GeometricAlgebra()
-    locals().update(ga.blades)
