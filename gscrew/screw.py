@@ -363,12 +363,3 @@ def comoment(coscrew: CoScrew, screw: Screw):
     """
     return ((-coscrew.direction.grade_involution() * screw.moment.grade_involution())(0)
             + (screw.direction * coscrew.moment)(0))
-
-if __name__ == "__main__":
-    from geometric_algebra import GeometricAlgebra, MultiVector
-    ga = GeometricAlgebra(3)
-    locals().update(ga.blades)
-
-    screw = Screw(e1, s + 2*e1, 0*s)
-    screw.show()
-    screw.show(e2)
