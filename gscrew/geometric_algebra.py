@@ -29,11 +29,11 @@ class GeometricAlgebra:
         e.g. for a 3D-algebra, it will be ``[1, 3, 3, 1]``
     blades_ids : list
         It contains the ids of the basis blades.
-        e.g. for a 2D-algebra, the basis blades are: ``e0, e1, e2, e12`` so the ids will be:
+        e.g. for a 2D-algebra, the basis blades are: ``s, e1, e2, e12`` so the ids will be:
         ``[(), (1,), (2,), (1, 2)]``.
     blades : dict
         This dictionnary contains the basis blades: ``{name: value}`` where
-        ``name`` is a string (e.g. ``'e0'``, ``'e1'``, ``'e2'`` etc) and ``value`` the associated
+        ``name`` is a string (e.g. ``'s'``, ``'e1'``, ``'e2'`` etc) and ``value`` the associated
         MultiVector instance.
 
     Methods
@@ -84,7 +84,7 @@ class GeometricAlgebra:
             if index:
                 names.append("e" + "".join(map(str, blade_name)))
             else:
-                names.append("e0")
+                names.append("s")
 
         value = np.zeros(self.nb_blades)
         for i in range(self.nb_blades):
@@ -192,7 +192,7 @@ class MultiVector:
 
         >>> import geometric_algebra as ga
         >>> geo_alg = ga.GeometricAlgebra(3)  # you should give the dimension of the algebra
-        >>> locals().update(geo_alg.blades)   # import the basis blades e.g. e0, e1, e2, e3, e12 etc
+        >>> locals().update(geo_alg.blades)   # import the basis blades e.g. s, e1, e2, e3, e12 etc
 
     Then you have fully initialize the module. To create a new MultiVector instance, you have two
     possibilities. The first one is also the easiest::
@@ -468,8 +468,8 @@ class MultiVector:
 
         Parameters
         ----------
-        other : MultiVector, scalar
-            The MultiVector or scalar to multiply.
+        other : scalar
+            The scalar to multiply.
 
         Returns
         -------
@@ -479,25 +479,13 @@ class MultiVector:
         Raises
         ------
         TypeError
-            If ``other`` is neither a scalar nor a MultiVector instance.
+            If ``other`` is not a scalar.
         """
         if np.isscalar(other):
             return MultiVector(self.geo_alg, other * self.value)
 
-        if not isinstance(other, MultiVector):
-            raise TypeError(f"other must be a scalar or a MultiVector instance instead of "\
-                    f"{type(other)}"
-                )
-
-        new_value = np.zeros(self.geo_alg.nb_blades)
-        for i in range(self.geo_alg.nb_blades):
-            if other[i]:
-                for j in range(self.geo_alg.nb_blades):
-                    if self[j]:
-                        index, sgn = self.__mul_basis(j, i)
-                        new_value[index] += sgn * other[i] * self[j]
-
-        return MultiVector(self.geo_alg, new_value)
+        else:
+            raise TypeError(f"other must be a scalar instead of {type(other)}")
 
     def __rsub__(self, other):
         """Compute the subtraction ``other - self``.
@@ -559,9 +547,7 @@ class MultiVector:
                     f"{type(other)}"
                 )
 
-        if self == other:
-            return MultiVector(self.geo_alg)
-        return (other * self) - (other | self)
+        return other ^ self
 
     __str__ = __repr__
 
@@ -652,9 +638,13 @@ class MultiVector:
                     f"{type(other)}"
                 )
 
-        if self == other:
-            return MultiVector(self.geo_alg)
-        return (self * other) - (self | other)
+        new_mv = MultiVector(self.geo_alg)
+        for gd1 in range(self.geo_alg.dim):
+            for gd2 in range(self.geo_alg.dim):
+                if gd1 + gd2 <= self.geo_alg.dim:
+                    new_mv += (self(gd1) * other(gd2))(gd1 + gd2)
+
+        return new_mv
 
     def __mul_basis(self, index1: int, index2: int):
         """Compute the geometrical product between two basis blades.

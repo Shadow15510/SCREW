@@ -1,5 +1,5 @@
 Basic use
-=================
+=========
 
 Installing the package
 ----------------------
@@ -33,7 +33,7 @@ Before manipulating screws, you need to initialize the geometric algebra in whic
 	my_algebra = ga.GeometricAlgebra(3)
 	locals().update(my_algebra.blades)
 
-On the first line, we create a new three-dimensional algebra. On the second one we add the basis blades to the local variables. It will allow you to use the basis blades (such as ``e0``, ``e1``, ``e2``… ``e12``… ``e123`` etc) to create new multivectors.
+On the first line, we create a new three-dimensional algebra. On the second one we add the basis blades to the local variables. It will allow you to use the basis blades (such as ``s``, ``e1``, ``e2``… ``e12``… ``e123`` etc) to create new multivectors.
 
 Finally creating a screw
 ------------------------
@@ -50,14 +50,14 @@ Once the geometric algebra has been initialized, you can start working with scre
 So let's see a small exemple::
 
 	A = e1 + e2  # the point A(1, 1, 0)
-	S1 = 1*e0    # e0 is the scalar dimension
+	S1 = 1*s     # s is the scalar dimension
 	M1 = 2*e2    # this is a simple vector
 	screw1 = Screw(A, S, M)
 
 To display a screw, you can print it, but it is recommended to use the method ``ScrewBase.show``. Indeed, the moment of a screw depends on the chosen point of reduction, so by using ``ScrewBase.show`` you can pass the point at which you want to display the screw::
 
 	screw1.show()  # will display the screw on the reference point, here A
-	screw1.show(0 * e0)  # will display the screw on the origin of the reference frame
+	screw1.show(0 * s)  # will display the screw on the origin of the reference frame
 
 .. note::
 	``print`` will display the screw at its reference point.

@@ -23,7 +23,7 @@ Let's see a minimal exemple::
     >>> from screw import Screw
     >>> my_algebra = ga.GeometricAlgebra(3)  # a 3-D geometric algebra
     >>> locals().update(my_algebra.blades)   # add the basis blades to the locals (i.e. 1, e1, e2…)
-    >>> reference_point = 0*e0           # the point of reference for the screw (here, the origin)
+    >>> reference_point = 0*s            # the point of reference for the screw (here, the origin)
     >>> direction = 2 + (3*e1) + (6*e3)  # creates a MultiVector for the screw's direction
     >>> moment = (2*e1) + (5*e2) + e3    # creates another MultiVector for the screw's moment
     >>> my_screw = Screw(reference_point, direction, moment)  # finally we create a Screw instance
@@ -363,3 +363,12 @@ def comoment(coscrew: CoScrew, screw: Screw):
     """
     return ((-coscrew.direction.grade_involution() * screw.moment.grade_involution())(0)
             + (screw.direction * coscrew.moment)(0))
+
+if __name__ == "__main__":
+    from geometric_algebra import GeometricAlgebra, MultiVector
+    ga = GeometricAlgebra(3)
+    locals().update(ga.blades)
+
+    screw = Screw(e1, s + 2*e1, 0*s)
+    screw.show()
+    screw.show(e2)

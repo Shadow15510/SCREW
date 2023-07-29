@@ -6,8 +6,8 @@
 ## Description
 A Python module to manipulate generalized Screws and Coscrews with geometric algebras (real Clifford algebras).
 
-- [readthedocs Documentation](https://gscrew.readthedocs.io/en/latest/).
-- [Bug tracker](https://github.com/GenScrew/GScrew/issues).
+- [readthedocs Documentation](https://gscrew.readthedocs.io/en/latest/)
+- [Bug tracker](https://github.com/GenScrew/GScrew/issues)
 
 ## Installation
 A Pypi package is available, please refer to the [Pypi page](https://pypi.org/project/GScrew/) or enter `pip install gscrew` in a terminal.
@@ -25,11 +25,11 @@ Once these modules have been imported, we can create the geometric algebra in wh
 my_algebra = ga.GeometricAlgebra(3)
 locals().update(my_algebra.blades)
 ```
-The second line adds the basis blades to the local variables so that we will be able to create new multivectors just by performing linear combinations of these basis blades. For a 3D algebra, the basis blades are: e0, e1, e2, e3, e12, e13, e32, e123.
+The second line adds the basis blades to the local variables so that we will be able to create new multivectors just by performing linear combinations of these basis blades. For a 3D algebra, the basis blades are: s, e1, e2, e3, e12, e13, e32, e123.
 
 We can now start working with Screw and CoScrew classes:
 ```
-O = 0 * e0  # the origin of the reference frame
+O = 0 * s  # the origin of the reference frame
 S = 1 + (2*e2) + (3*e3)  # the direction of the screw
 M = (e1) + (5*e3)        # the moment of the screw
 my_screw = Screw(O, S, M)

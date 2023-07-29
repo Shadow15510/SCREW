@@ -23,7 +23,7 @@ Content
 -------
 .. toctree::
     Home <self>
-    Basic utilisation <tutorials>
+    Basic use <tutorials>
     Geometric algebra <geometric_algebra>
     Screws and coscrews <screw>
 
