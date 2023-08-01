@@ -113,7 +113,7 @@ class GeometricAlgebra:
         --------
         If we work in a three-dimensionnal algebra::
 
-            >>> geo_alg = ga.GeometricAlgebra(3)
+            >>> geo_alg = GeometricAlgebra(3)
             >>> geo_alg.get_grade(2)
             (4, 6)
 
@@ -190,9 +190,10 @@ class MultiVector:
     Let's show you a complete exemple of a manipulation of MultiVector.
     You must start by importing the module::
 
-        >>> import geometric_algebra as ga
-        >>> geo_alg = ga.GeometricAlgebra(3)  # you should give the dimension of the algebra
-        >>> locals().update(geo_alg.blades)   # import the basis blades e.g. s, e1, e2, e3, e12 etc
+        >>> import gscrew
+        >>> from gscrew.geometric_algebra import GeometricAlgebra, MultiVector
+        >>> ga = GeometricAlgebra(3)    # you should give the dimension of the algebra
+        >>> locals().update(ga.blades)  # import the basis blades e.g. s, e1, e2, e3, e12 etc
 
     Then you have fully initialize the module. To create a new MultiVector instance, you have two
     possibilities. The first one is also the easiest::
@@ -201,13 +202,13 @@ class MultiVector:
 
     You can also call the constructor method manually::
         
-        >>> my_mv = ga.MultiVector(geo_alg, (1, 1, 5, 0, 0, 1/5, 0, 0))
+        >>> my_mv = MultiVector(geo_alg, (1, 1, 5, 0, 0, 1/5, 0, 0))
 
     .. warning::
         In the second case you have to give all the coefficients and the GeometricAlgebra instance.
 
     .. note::
-        When you just create a new MultiVector by using the basis blades, the new instance inherits
+        When you create a new MultiVector by using the basis blades, the new instance inherits
         the geometric algebra of the basis blades.
     """
     def __init__(self, geo_alg: GeometricAlgebra, value=None):
@@ -218,9 +219,9 @@ class MultiVector:
         geo_alg : GeometricAlgebra
             The algebra to which the multivector belongs.
         value
-            The coefficients of the multivector.
+            The coefficients of the multivector
 
-            .. note:: It must be transtypable into an np.array.
+            .. note:: It must be transtypable into an ``numpy.array``.
         """
         self.geo_alg = geo_alg
         if value is None:

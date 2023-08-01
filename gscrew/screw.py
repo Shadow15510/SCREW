@@ -19,10 +19,11 @@ can use n-dimensional multivectors.
 
 Let's see a minimal exemple::
 
-    >>> import geometric_algebra as ga
-    >>> from screw import Screw
-    >>> my_algebra = ga.GeometricAlgebra(3)  # a 3-D geometric algebra
-    >>> locals().update(my_algebra.blades)   # add the basis blades to the locals (i.e. 1, e1, e2…)
+    >>> import gscrew
+    >>> from gscrew.geometric_algebra import GeometricAlgebra
+    >>> from gscrew.screw import Screw
+    >>> my_algebra = GeometricAlgebra(3)  # a 3-D geometric algebra
+    >>> locals().update(my_algebra.blades)  # add the basis blades to the locals (i.e. 1, e1, e2…)
     >>> reference_point = 0*s            # the point of reference for the screw (here, the origin)
     >>> direction = 2 + (3*e1) + (6*e3)  # creates a MultiVector for the screw's direction
     >>> moment = (2*e1) + (5*e2) + e3    # creates another MultiVector for the screw's moment

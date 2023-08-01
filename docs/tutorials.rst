@@ -13,7 +13,8 @@ Importing the package
 ---------------------
 Once GScrew is installed, you should import it as following::
 	
-	import gscrew.geometric_algebra as ga
+	import gscrew
+	from gscrew.geometric_algebra import GeometricAlgebra, Multivector
 	from gscrew.screw import Screw, CoScrew, comoment
 
 The ``geometric_algebra`` module is a framework which provides you with a n-dimensional geometric algebra and multivectors.
@@ -30,7 +31,7 @@ Initializing the framework
 --------------------------
 Before manipulating screws, you need to initialize the geometric algebra in which you will work. For the exemple, we work with a three-dimensionnal one but the module can handle n-dimensional algebras::
 
-	my_algebra = ga.GeometricAlgebra(3)
+	my_algebra = GeometricAlgebra(3)
 	locals().update(my_algebra.blades)
 
 On the first line, we create a new three-dimensional algebra. On the second one we add the basis blades to the local variables. It will allow you to use the basis blades (such as ``s``, ``e1``, ``e2``… ``e12``… ``e123`` etc) to create new multivectors.
