@@ -214,17 +214,15 @@ class MultiVector:
     def __init__(self, geo_alg: GeometricAlgebra, value=None):
         """Constructor method.
 
+        .. note:: ``value`` must be transtypable into an ``numpy.array``.
+
         Parameters
         ----------
         geo_alg : GeometricAlgebra
             The algebra to which the multivector belongs.
         value
             The coefficients of the multivector.
-
-            .. note::
-                It must be transtypable into an ``numpy.array``.
         """ 
-        #    .. note:: It must be transtypable into an ``numpy.array``.
         self.geo_alg = geo_alg
         if value is None:
             self.value = np.zeros(geo_alg.nb_blades)
