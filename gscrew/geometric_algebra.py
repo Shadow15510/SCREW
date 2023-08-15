@@ -220,7 +220,9 @@ class MultiVector:
             The algebra to which the multivector belongs.
         value
             The coefficients of the multivector.
-            .. note:: It must be transtypable into an ``numpy.array``.
+
+            .. note::
+                It must be transtypable into an ``numpy.array``.
         """ 
         #    .. note:: It must be transtypable into an ``numpy.array``.
         self.geo_alg = geo_alg

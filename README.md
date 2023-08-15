@@ -15,14 +15,15 @@ A Pypi package is available, please refer to the [Pypi page](https://pypi.org/pr
 ## Exemples
 First of all, you need to import the modules:
 ```
-import gscrew.geometric_algebra as ga
+import gscrew
+from gscrew.geometric_algebra import GeometricAlgebra
 from gscrew.screw import Screw
 ```
 The `screw` module also provides a `CoScrew` object and the `comoment` function for calculating the comoment between a coscrew and a screw.
 
 Once these modules have been imported, we can create the geometric algebra in which we will be working. For basic physical applications, a three-dimensionnal algebra should suffice:
 ```
-my_algebra = ga.GeometricAlgebra(3)
+my_algebra = GeometricAlgebra(3)
 locals().update(my_algebra.blades)
 ```
 The second line adds the basis blades to the local variables so that we will be able to create new multivectors just by performing linear combinations of these basis blades. For a 3D algebra, the basis blades are: s, e1, e2, e3, e12, e13, e32, e123.
