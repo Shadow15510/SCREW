@@ -25,9 +25,9 @@ Let's see a minimal exemple::
     >>> my_algebra = GeometricAlgebra(3)  # a 3-D geometric algebra
     >>> locals().update(my_algebra.blades)  # add the basis blades to the locals (i.e. 1, e1, e2…)
     >>> reference_point = 0*s            # the point of reference for the screw (here, the origin)
-    >>> direction = 2 + (3*e1) + (6*e3)  # creates a MultiVector for the screw's direction
+    >>> resultant = 2 + (3*e1) + (6*e3)  # creates a MultiVector for the screw's resultant
     >>> moment = (2*e1) + (5*e2) + e3    # creates another MultiVector for the screw's moment
-    >>> my_screw = Screw(reference_point, direction, moment)  # finally we create a Screw instance
+    >>> my_screw = Screw(reference_point, resultant, moment)  # finally we create a Screw instance
 """
 
 
@@ -42,8 +42,8 @@ class ScrewBase:
     ----------
     ref_point : MultiVector
         The point of reference of the screw.
-    direction : MultiVector
-        The direction multivector S or the screw.
+    resultant : MultiVector
+        The resultant multivector S or the screw.
     moment : MultiVector
         The moment multivector M of the the screw.
 
@@ -53,15 +53,15 @@ class ScrewBase:
     .. automethod:: change_point
     .. automethod:: show
     """
-    def __init__(self, ref_point, direction, moment):
+    def __init__(self, ref_point, resultant, moment):
         """Constructor method.
 
         Parameters
         ----------
         ref_point : MultiVector
             The point of reference of the (co)screw
-        direction : MultiVector
-            The direction of the (co)screw, usually named S.
+        resultant : MultiVector
+            The resultant of the (co)screw, usually named S.
         moment : MultiVector
             The moment of the (co)screw, usually named M.
 
@@ -74,7 +74,7 @@ class ScrewBase:
             raise TypeError("ref_point is not a point")
 
         self.ref_point = ref_point
-        self.direction = direction
+        self.resultant = resultant
         self.moment = moment
 
     def __repr__(self):
@@ -86,7 +86,7 @@ class ScrewBase:
             The string representation of the (co)Screw.
         """
         name = self.__class__.__name__
-        return f"{name}(\n\tdirection={self.direction}\n\tmoment={self.moment}\n)"
+        return f"{name} at {self.ref_point} (\n\t{self.resultant}\n\t{self.moment}\n)"
 
     def change_point(self, new_point):
         """Computes and returns the (co)screw on the new reference point. The formula changes
@@ -104,13 +104,13 @@ class ScrewBase:
         """
         new_moment = self.moment
         if self.__class__.__name__ == "Screw":
-            new_moment = self.moment - ((new_point - self.ref_point) ^ self.direction)
+            new_moment = self.moment - ((new_point - self.ref_point) ^ self.resultant)
         elif self.__class__.__name__ == "CoScrew":
-            new_moment = self.moment - (self.direction | (new_point - self.ref_point))
+            new_moment = self.moment - (self.resultant | (new_point - self.ref_point))
 
         return self.__class__(
                 new_point,
-                self.direction,
+                self.resultant,
                 new_moment
             )
 
@@ -178,7 +178,7 @@ class Screw(ScrewBase):
 
         return Screw(
                 self.ref_point,
-                self.direction + other.direction,
+                self.resultant + other.resultant,
                 self.moment + other.moment
             )
 
@@ -210,8 +210,8 @@ class Screw(ScrewBase):
 
         return Screw(
                 self.ref_point,
-                (self.direction ^ other.moment) + (self.moment.grade_involution() ^
-                        other.direction),
+                (self.resultant ^ other.moment) + (self.moment.grade_involution() ^
+                        other.resultant),
                 self.moment ^ other.moment
             )
 
@@ -225,7 +225,7 @@ class Screw(ScrewBase):
         """
         return CoScrew(
                 self.ref_point,
-                -(self.direction.dual()).grade_involution(),
+                -self.resultant.dual(),
                 self.moment.dual()
             )
 
@@ -278,7 +278,7 @@ class CoScrew(ScrewBase):
 
         return CoScrew(
                 self.ref_point,
-                self.direction + other.direction,
+                self.resultant + other.resultant,
                 self.moment + other.moment
             )
 
@@ -307,12 +307,12 @@ class CoScrew(ScrewBase):
 
         return CoScrew(
                 self.ref_point,
-                scalar * self.direction,
+                scalar * self.resultant,
                 scalar * self.moment
             )
 
     def composition(self, other):
-        """Compute the composition of two coscrew.
+        """Compute the composition of two coscrews.
         
         Parameters
         ----------
@@ -329,26 +329,26 @@ class CoScrew(ScrewBase):
         TypeError
             If ``other`` is not a CoScrew instance.
         ValueError
-            If the two directions are not spinors.
+            If the two resultants are not spinors.
         """
         if not isinstance(other, CoScrew):
             raise TypeError(f"other must be a CoScrew instance instead of {type(other)}")
 
-        if not (self.direction.isspinor() and other.direction.isspinor()):
-            raise ValueError("all the directions must be spinors")
+        if not (self.resultant.isspinor() and other.resultant.isspinor()):
+            raise ValueError("all the resultants must be spinors")
 
         if self.ref_point != other.ref_point:
             other = other.change_point(self.ref_point)
 
         return CoScrew(
                 self.ref_point,
-                self.direction * other.direction,
-                self.direction * other.moment + self.moment * other.direction
+                self.resultant * other.resultant,
+                self.resultant * other.moment + self.moment * other.resultant
             )
 
 
 def comoment(coscrew: CoScrew, screw: Screw):
-    """Compute the comoment between a coscrew and a screw.
+    """Compute the real comoment between a coscrew and a screw.
 
     Parameters
     ----------
@@ -360,7 +360,6 @@ def comoment(coscrew: CoScrew, screw: Screw):
     Returns
     -------
     out : MultiVector
-        The comoment between the given coscrew and the screw.
+        The real comoment between the given coscrew and the screw.
     """
-    return ((-coscrew.direction.grade_involution() * screw.moment.grade_involution())(0)
-            + (screw.direction * coscrew.moment)(0))
+    return -coscrew.resultant * screw.moment)(0) + (coscrew.moment * screw.resultant)(0)

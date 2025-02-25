@@ -42,7 +42,7 @@ Once the geometric algebra has been initialized, you can start working with scre
 
 * the reference point at which the screw is expressed
 
-* the direction of the screw (which is independent of the reference point)
+* the resultant of the screw (which is independent of the reference point)
 
 * the moment of the screw (which depends on the reference point)
 

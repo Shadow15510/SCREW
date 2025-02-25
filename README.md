@@ -31,7 +31,7 @@ The second line adds the basis blades to the local variables so that we will be 
 We can now start working with Screw and CoScrew classes:
 ```
 O = 0 * s  # the origin of the reference frame
-S = 1 + (2*e2) + (3*e3)  # the direction of the screw
+S = 1 + (2*e2) + (3*e3)  # the resultant of the screw
 M = (e1) + (5*e3)        # the moment of the screw
 my_screw = Screw(O, S, M)
 ```
