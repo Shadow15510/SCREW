@@ -1,5 +1,6 @@
 """
 This code is intended as an example for the use of the generalized screw formalism in general and the GScrew package in particular. It provides a numerical solution to the forward kinematics of a robotic arm, composed of a number of successive revolute joints.
+The code was developed for pedagogical purposes, and is not optimized for industrial use.
 """
 
 import numpy as np
