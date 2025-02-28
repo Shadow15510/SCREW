@@ -86,7 +86,7 @@ class ScrewBase:
             The string representation of the (co)Screw.
         """
         name = self.__class__.__name__
-        return f"{name} at {self.ref_point} (\n\t{self.resultant}\n\t{self.moment}\n)"
+        return f"{name} (\n\t{self.resultant}\n\t{self.moment}\n\t)_{self.ref_point}"
 
     def change_point(self, new_point):
         """Computes and returns the (co)screw on the new reference point. The formula changes
@@ -104,16 +104,14 @@ class ScrewBase:
         """
         new_moment = self.moment
         if self.__class__.__name__ == "Screw":
-            new_moment = self.moment - ((new_point - self.ref_point) ^ self.resultant)
+            new_moment = self.moment + ((self.ref_point - new_point) ^ self.resultant)
         elif self.__class__.__name__ == "CoScrew":
-            new_moment = self.moment - (self.resultant | (new_point - self.ref_point))
+            new_moment = self.moment - ((self.ref_point - new_point) | self.resultant)
 
-        return self.__class__(
-                new_point,
-                self.resultant,
-                new_moment
-            )
+        self.ref_point = new_point
+        self.moment = new_moment
 
+        return self
 
     def show(self, new_point=None):
         """Print the (co)screw on a given point.
@@ -362,4 +360,4 @@ def comoment(coscrew: CoScrew, screw: Screw):
     out : MultiVector
         The real comoment between the given coscrew and the screw.
     """
-    return -coscrew.resultant * screw.moment)(0) + (coscrew.moment * screw.resultant)(0)
+    return (~coscrew.resultant * screw.moment)(0) + (~coscrew.moment * screw.resultant)(0)
